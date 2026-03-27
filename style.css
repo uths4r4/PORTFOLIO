@@ -290,7 +290,7 @@ ul { list-style: none; }
 .carousel-item {
     min-width: 380px;
     height: 240px;
-    background: #e2e8f0;
+    background: transparent;
     border-radius: var(--radius-md);
     scroll-snap-align: start;
     display: flex;
@@ -300,6 +300,9 @@ ul { list-style: none; }
     box-shadow: var(--shadow-sm);
     flex-shrink: 0;
     border: 1px solid #cbd5e1;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 .placeholder-icon {
     font-size: 3rem; margin-bottom: 10px; opacity: 0.8;
