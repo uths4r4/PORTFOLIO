@@ -3,27 +3,19 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Intersection Observer for Scroll Animations
-    // Finds all elements with .fade-in-up and animates them on scroll
     const fadeElements = document.querySelectorAll('.fade-in-up');
-
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px -50px 0px', // trigger slightly before it comes fully into view
-        threshold: 0.1
-    };
+    const observerOptions = { root: null, rootMargin: '0px 0px -50px 0px', threshold: 0.1 };
 
     const scrollObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                observer.unobserve(entry.target); // Only animate once
+                observer.unobserve(entry.target); 
             }
         });
     }, observerOptions);
 
-    fadeElements.forEach(el => {
-        scrollObserver.observe(el);
-    });
+    fadeElements.forEach(el => scrollObserver.observe(el));
 
     // 2. Smooth Scrolling for Navigation Links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -33,15 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 const targetElement = document.querySelector(targetAttr);
                 if (targetElement) {
-                    // Add an offset for sticky header
                     const headerOffset = 80; 
                     const elementPosition = targetElement.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
       
-                    window.scrollTo({
-                         top: offsetPosition,
-                         behavior: "smooth"
-                    });
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
                 }
             }
         });
@@ -54,9 +42,39 @@ document.addEventListener('DOMContentLoaded', () => {
             navbar.style.background = 'rgba(252, 251, 249, 0.98)';
             navbar.style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.05)';
         } else {
-            navbar.style.background = 'rgba(252, 251, 249, 0.8)';
+            navbar.style.background = 'transparent';
             navbar.style.boxShadow = 'none';
         }
     });
 
+    // 4. Project Accordion Logic
+    document.querySelectorAll('.expand-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation(); // prevent double clicking if event bubbles
+            const accordion = btn.closest('.project-accordion');
+            
+            // Close others
+            document.querySelectorAll('.project-accordion').forEach(item => {
+                if (item !== accordion) {
+                    item.classList.remove('active');
+                    item.querySelector('.btn-text').textContent = 'Click to read more';
+                }
+            });
+            
+            // Toggle current
+            accordion.classList.toggle('active');
+            
+            // Update button text
+            const btnText = btn.querySelector('.btn-text');
+            if(accordion.classList.contains('active')) {
+                btnText.textContent = 'Close Details';
+                setTimeout(() => {
+                    const offset = accordion.getBoundingClientRect().top + window.pageYOffset - 120;
+                    window.scrollTo({ top: offset, behavior: 'smooth' });
+                }, 300);
+            } else {
+                btnText.textContent = 'Click to read more';
+            }
+        });
+    });
 });
